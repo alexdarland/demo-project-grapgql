@@ -20,7 +20,8 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "graphql": "^16.8.1"
+    "graphql": "^16.8.1",
+    "openai": "^4.38.3"
   },
   "devDependencies": {
     "@babel/runtime": "^7.24.4",

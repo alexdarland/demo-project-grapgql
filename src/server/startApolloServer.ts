@@ -2,9 +2,9 @@ import { ApolloServer } from "@apollo/server";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { expressMiddleware } from "@apollo/server/express4";
 import express from "express";
-import bodyParser from "body-parser";
 import http from "http";
 import cors from "cors";
+import * as openai from "../datasources/openai";
 
 const typeDefs = `#graphql
   type Query {
@@ -26,9 +26,13 @@ const typeDefs = `#graphql
 // A map of functions which return data for the schema.
 const resolvers = {
   Query: {
-    Suggestions: () => {
+    Suggestions: async (_, { statements }, { dataSources: { openai } }) => {
+      const result = await openai.getChatCompletions(statements);
+      const parsedResult =
+        result?.choices[0]?.message?.content?.split(",") || [];
+
       return {
-        proffessions: ["Läkare", "Programmerare", "Musiker"],
+        proffessions: parsedResult,
         educations: [
           {
             name: "Musikmakarna 80p",
@@ -53,7 +57,20 @@ export async function startApolloServer(port: string | number = 8001) {
 
   await server.start();
 
-  app.use(cors(), bodyParser.json(), expressMiddleware(server));
+  app.use(express.json());
+  app.use(cors());
+  app.use(
+    "/graphql",
+    expressMiddleware(server, {
+      context: async () => {
+        return {
+          dataSources: {
+            openai,
+          },
+        };
+      },
+    })
+  );
 
   await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
   console.log(`🚀 Server ready at http://localhost:${port}`);
