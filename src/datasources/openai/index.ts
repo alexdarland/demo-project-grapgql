@@ -1,11 +1,14 @@
 import OpenAI from "openai";
+import { swedishProffessions } from "./swedish-proffessions";
 
 const openai = new OpenAI();
 
 const constructQuestion = (statements) => {
-  return `Can you return a comma separated list (without whitespaces and first letter should be a capital letter) of proffessions in Swedish (without English translation) for a person who has the following traits: ${statements.join(
+  return `Här är en lista med yrken: ${swedishProffessions.join(
     ", "
-  )}`;
+  )}. En person har följande egenskaper: ${statements.join(
+    ", "
+  )}. Vilket yrke skulle passa denna peson bäst? Välj 5 alternativ och förklara varför du valde just dessa.`;
 };
 
 export const getChatCompletions = async (statements) => {
