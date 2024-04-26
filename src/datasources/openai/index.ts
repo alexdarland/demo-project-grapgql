@@ -8,7 +8,7 @@ const constructQuestion = (statements) => {
     ", "
   )}. En person har följande egenskaper: ${statements.join(
     ", "
-  )}. Vilka yrken skulle passa denna peson bäst? Sortera på relevans, välj dom 10 bästa matchningarna och returnera dessa i en kommaseparerad lista som är formaterad så här: "yrke1,yrke2,yrke3".`;
+  )}. Vilka yrken skulle passa denna peson bäst? Sortera på relevans, välj dom 10 bästa matchningarna och returnera dessa i en kommaseparerad lista som är formaterad så här: "yrke1,yrke2,yrke3"`;
 };
 
 export const getChatCompletions = async (statements) => {
