@@ -8,38 +8,49 @@ import * as openai from "../datasources/openai";
 
 const typeDefs = `#graphql
   type Query {
-    Suggestions(statements: [String]!): Suggestions
+    SuggestionsByStatements(statements: [String]!): Suggestions
+    SuggestionsByPersonalityScores(practical: Int!, caring: Int!, analytical: Int!, driven: Int!, artistic: Int!, organized: Int!): Suggestions
   }
   
   type Suggestions {
-    proffessions: [String],
-    educations: [Educations],
-  }
-
-  type Educations {
-    name: String,
-    type: String,
-    url: String,
+    proffessions: [String]
   }
 `;
 
 // A map of functions which return data for the schema.
 const resolvers = {
   Query: {
-    Suggestions: async (_, { statements }, { dataSources: { openai } }) => {
-      const result = await openai.getChatCompletions(statements);
+    SuggestionsByStatements: async (
+      _,
+      { statements },
+      { dataSources: { openai } }
+    ) => {
+      const result = await openai.getSuggestionsByStatements(statements);
       const parsedResult =
         result?.choices[0]?.message?.content?.split(",") || [];
 
       return {
         proffessions: parsedResult,
-        educations: [
-          {
-            name: "Musikmakarna 80p",
-            type: "Universitet",
-            url: "http://www.test.com",
-          },
-        ],
+      };
+    },
+    SuggestionsByPersonalityScores: async (
+      _,
+      { practical, caring, analytical, driven, artistic, organized },
+      { dataSources: { openai } }
+    ) => {
+      const result = await openai.getSuggestionsByPersonalityScores({
+        practical,
+        caring,
+        analytical,
+        driven,
+        artistic,
+        organized,
+      });
+      const parsedResult =
+        result?.choices[0]?.message?.content?.split(",") || [];
+
+      return {
+        proffessions: parsedResult,
       };
     },
   },
