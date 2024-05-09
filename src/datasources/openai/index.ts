@@ -41,7 +41,7 @@ export const getSuggestionsByPersonalityScores = async (statements) => {
       personalityScores.artistic
     }, Ordningsam: ${
       personalityScores.organized
-    }. Vilka av ovnnämnade yrken skulle passa denna peson bäst? Sortera på relevans, välj dom 10 bästa matchningarna och returnera enbart en lista som är formaterad så här: "yrke1,yrke2,yrke3"`;
+    }. Vilka av ovnnämnade yrken skulle passa denna peson bäst? Sortera på relevans, välj dom 10 bästa matchningarna och returnera enbart en lista som är formaterad så här: "yrke1,yrke2,yrke3". Ingen dialog, inga komentarer, bara en kommaseparerad lista!`;
   };
 
   const completion = await openai.chat.completions.create({
